@@ -14,3 +14,13 @@ const loadGetMsg = () => {
     xhttp.open("GET", "/movie?t=" + encodeURIComponent(movieVar));
     xhttp.send();
 }
+
+const handleKeyPress = (event) => {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        loadGetMsg();
+    }
+};
+
+
+

@@ -7,10 +7,15 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h1>Test App</h1>
-<button id="test" onclick="myAction()">Click me!</button>
+<h1 id="title">OMDBAPI's Movies</h1>
+<form>
+    <label for="movie">Movie:</label><br>
+    <input type="text" id="movie" name="movie" value="Guardians of the Galaxy" onkeypress="handleKeyPress(event)"><br><br>
+    <input type="button" value="Submit" onclick="loadGetMsg()">
+</form>
+<div id="getrespmsg"></div>
 <br><br>
-<img src="/image.jpg" alt="Gatitos">
+<img src="/image.jpg" alt="Gatitos" id="gatitos">
 <script src="data.js"></script>
 </body>
 </html>

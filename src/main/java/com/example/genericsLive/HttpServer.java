@@ -7,7 +7,15 @@ import java.net.*;
 import java.nio.charset.*;
 import java.nio.file.*;
 
+/**
+ * Clase que representa un servidor HTTP básico que maneja solicitudes GET para archivos locales.
+ */
 public class HttpServer {
+
+    /**
+     * Método principal que inicia el servidor HTTP.
+     * @param args Argumentos de línea de comandos (no se utilizan).
+     */
     public static void main(String[] args) {
         try (ServerSocket serverSocket = new ServerSocket(35000)) {
             System.out.println("Servidor listo para recibir conexiones...");
@@ -20,6 +28,10 @@ public class HttpServer {
         }
     }
 
+    /**
+     * Maneja una solicitud HTTP recibida desde un cliente.
+     * @param clientSocket El socket del cliente que realizó la solicitud.
+     */
     private static void handleRequest(Socket clientSocket) {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
              OutputStream outputStream = clientSocket.getOutputStream()) {
@@ -50,6 +62,12 @@ public class HttpServer {
         }
     }
 
+    /**
+     * Genera la respuesta HTTP adecuada para una solicitud específica.
+     * @param requestedURI La URI solicitada por el cliente.
+     * @param method El método HTTP utilizado en la solicitud.
+     * @return La respuesta HTTP generada.
+     */
     private static String htttpResponse(URI requestedURI, String method) {
         if (requestedURI.getPath().equals("/movie")){
             return obtainHtmlRequest(method, requestedURI);
@@ -68,6 +86,12 @@ public class HttpServer {
         }
     }
 
+    /**
+     * Obtiene la respuesta HTML para la solicitud de la película.
+     * @param method El método HTTP utilizado en la solicitud.
+     * @param uri La URI solicitada por el cliente.
+     * @return La respuesta HTML generada.
+     */
     private static String obtainHtmlRequest(String method, URI uri) {
         JSONObject jsonResponse = HttpRequestHandler.handleRequest(method, uri);
 
@@ -108,7 +132,10 @@ public class HttpServer {
         return outputLine;
     }
 
-
+    /**
+     * Genera una página de error HTTP básica.
+     * @return La página de error generada.
+     */
     private static String httpError() {
         String errorPage = "<!DOCTYPE html>\n" +
                 "<html>\n" +
@@ -124,6 +151,13 @@ public class HttpServer {
         return errorPage;
     }
 
+    /**
+     * Crea una respuesta HTTP con el código de estado, tipo de contenido y contenido especificados.
+     * @param statusCode El código de estado HTTP.
+     * @param contentType El tipo de contenido HTTP.
+     * @param content El contenido de la respuesta.
+     * @return La respuesta HTTP generada.
+     */
     private static String createHttpResponse(int statusCode, String contentType, byte[] content) {
         StringBuilder response = new StringBuilder();
         response.append("HTTP/1.1 ").append(statusCode).append(" OK\r\n");
@@ -134,6 +168,11 @@ public class HttpServer {
         return response.toString();
     }
 
+    /**
+     * Obtiene el tipo de contenido MIME basado en la extensión del archivo.
+     * @param fileName El nombre del archivo.
+     * @return El tipo de contenido MIME.
+     */
     private static String getContentType(String fileName) {
         switch (getFileExtension(fileName)) {
             case "html":
@@ -154,6 +193,11 @@ public class HttpServer {
         }
     }
 
+    /**
+     * Obtiene la extensión de un archivo a partir de su nombre.
+     * @param fileName El nombre del archivo.
+     * @return La extensión del archivo.
+     */
     private static String getFileExtension(String fileName) {
         int dotIndex = fileName.lastIndexOf('.');
         if (dotIndex == -1 || dotIndex == fileName.length() - 1) {
